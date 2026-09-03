@@ -13,8 +13,6 @@ function updateClock() {
   }
 }
 
-// Sayfa yüklenir yüklenmez ilk değeri yaz
 updateClock();
 
-// Her 1 saniyede bir güncelle
 setInterval(updateClock, 1000);
