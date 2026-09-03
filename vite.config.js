@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/my-swag-tab/',
-})
+
+  base: '/My-Swag-Tab/', 
+});
