@@ -4,22 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My SWAG Tab</title>
-  <link rel="stylesheet" href="/src/style.css" />
-</head>
-<body>
-  <main id="app">
-    
-<div id="clock" class="clock-display">00:00</div>
-  
-<section id="search-widget" class="card">
-  <form action="https://www.google.com/search" method="GET" target="_blank">
-    <input 
-      type="text" 
-      name="q" 
-      placeholder="write something or paste a link.." 
-      required
-      autocomplete="off"
-    />
-    <button type="submit">search</button>
-  </form>
-</section> 
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <div id="clock" class="clock-display">00:00:00</div>
+
+      <section id="search-widget" class="card">
+        <form action="https://www.google.com/search" method="GET" target="_blank">
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="write something or paste a link.." 
+            required
+            autocomplete="off"
+          />
+          <button type="submit">search</button>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
