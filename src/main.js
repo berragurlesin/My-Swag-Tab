@@ -34,4 +34,8 @@ function updateClock() {
 }
 
 updateClock();
+<<<<<<< HEAD
 setInterval(updateClock, 1000);
+=======
+setInterval(updateClock, 1000);
+>>>>>>> 447cfc1dbe6974ea14fabd8def906cb171e6b2ac
