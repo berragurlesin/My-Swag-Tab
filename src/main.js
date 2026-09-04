@@ -44,16 +44,20 @@ const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
 async function fetchNASAImage() {
   try {
     const response = await fetch(APOD_URL);
-    if (!response.ok) throw new Error(`HTTP ERROR: ${response.status}`);
+    if (!response.ok) throw new Error(`Couldn't be loaded:(`);
     
     const data = await response.json();
     
     const titleEl = document.getElementById('nasa-title');
-    const imageEl = document.getElementById('nasa-image');
-    const expEl = document.getElementById('nasa-explanation');
+  const imageEl = document.getElementById('nasa-image');
+  const expEl = document.getElementById('nasa-explanation');
 
-    if (titleEl) titleEl.textContent = data.title;
-    if (expEl) expEl.textContent = data.explanation;
+  if (titleEl) {
+    titleEl.textContent = data.title;
+  }
+  if (expEl) {
+    expEl.textContent = data.explanation;
+  }
 
     if (data.media_type === 'image' && imageEl) {
       imageEl.src = data.hdurl || data.url;
@@ -67,7 +71,9 @@ async function fetchNASAImage() {
   } catch (error) {
     console.error('ERROR', error);
     const titleEl = document.getElementById('nasa-title');
-    if (titleEl) titleEl.textContent = 'Image couldn\'t be loaded:(';
+    if (titleEl) {
+    titleEl.textContent = 'Image couldn\'t be loaded:(';
+  }
   }
 }
 
