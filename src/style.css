@@ -113,3 +113,162 @@ body {
   overflow-y: auto;
   margin-bottom: 0;
 }
+
+.shortcuts-card {
+  width: 360px;
+  background-color: #ffffff;
+  background-image: url('/discopattern.jpg'); 
+  background-position: center;
+  border: 3px solid #000000;
+  border-radius: 12px;
+  padding: 38px 16px 16px 16px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden; 
+}
+
+.shortcuts-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 2px solid #000000;
+  padding: 4px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shortcuts-banner span {
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: #000000;
+  letter-spacing: 1px;
+}
+
+.shortcuts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.app-icon, .add-box-btn {
+  width: 52px;
+  height: 52px;
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: bold;
+  color: #000000;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  box-sizing: border-box;
+  box-shadow:none;
+}
+
+.app-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.add-box-btn {
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 100;
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-content {
+  background: #ffffff;
+  border: 3px solid #000000;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 260px;
+  box-shadow: none;
+  color: #000000;
+}
+
+.modal-content input {
+  border: 2px solid #000000;
+  padding: 6px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-buttons button {
+  border: 2px solid #000000;
+  background: #ffffff;
+  padding: 4px 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-buttons button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.shortcut-item {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-shortcut-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background-color: #c0c0c0; 
+  color: #000000;
+  border: 2px solid #000000;  
+  border-radius: 0px;         
+  font-family: monospace, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  z-index: 10;
+  padding: 0;
+  box-shadow: none; 
+}
+
+.shortcut-item:hover .delete-shortcut-btn {
+  opacity: 1;
+}
+
+.delete-shortcut-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
