@@ -22,4 +22,4 @@ export default function Clock() {
       <span className="clock-time">{formattedTime}</span>
     </div>
   );
-}
+} 

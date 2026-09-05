@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My SWAG Tab</title>
-    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
     <main id="app">
       <div id="clock" class="clock-display">
-        <img id="h1" src="/digits/0.png" alt="0" />
-        <img id="h2" src="/digits/0.png" alt="0" />
-        <img class="colon" src="/digits/Colon.png" alt=":" />
-        <img id="m1" src="/digits/0.png" alt="0" />
-        <img id="m2" src="/digits/0.png" alt="0" />
-        <img class="colon" src="/digits/Colon.png" alt=":" />
-        <img id="s1" src="/digits/0.png" alt="0" />
-        <img id="s2" src="/digits/0.png" alt="0" />
+        <img id="h1" src="./digits/0.png" alt="0" />
+        <img id="h2" src="./digits/0.png" alt="0" />
+        <img class="colon" src="./digits/Colon.png" alt=":" />
+        <img id="m1" src="./digits/0.png" alt="0" />
+        <img id="m2" src="./digits/0.png" alt="0" />
+        <img class="colon" src="./digits/Colon.png" alt=":" />
+        <img id="s1" src="./digits/0.png" alt="0" />
+        <img id="s2" src="./digits/0.png" alt="0" />
       </div>
 
       <section id="search-widget" class="card">
@@ -31,8 +31,37 @@
           <button type="submit">search</button>
         </form>
       </section>
+
+      <div class="shortcuts-card">
+        <div class="shortcuts-banner">
+          <span>fav shortcuts ♡</span>
+        </div>
+    
+        <div id="shortcuts-grid" class="shortcuts-grid">
+        </div>
+      </div>
+
+      <div id="app-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <h3>add your fav shortcut</h3>
+          <input type="text" id="app-name-input" placeholder="site name" />
+          <input type="url" id="app-url-input" placeholder="URL" />
+          <div class="modal-buttons">
+            <button id="save-app-btn">OK</button>
+            <button id="close-modal-btn">cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="nasa-card" class="nasa-card">
+        <h2 id="nasa-title">Loading space image...</h2>
+        <div id="nasa-media-container">
+          <img id="nasa-image" src="" alt="NASA APOD" style="display: none;" />
+        </div>
+        <p id="nasa-explanation"></p>
+      </section>
     </main>
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
