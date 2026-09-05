@@ -38,8 +38,8 @@ updateClock();
 setInterval(updateClock, 1000);
 
 
-const NASA_API_KEY = 'm0LmROXySEE7cHB0zwmssIxVPyUauHCXJLID6MMF'; 
-const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
+const NASA_API_KEY = ''; 
+const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
 
 async function fetchNASAImage() {
   try {
@@ -167,4 +167,8 @@ saveBtn.addEventListener('click', () => {
   }
 });
 
+<<<<<<< HEAD
 renderApps();
+=======
+renderApps();
+>>>>>>> 6ba6553827bffa0d18d72b49328edf3ce75884f4
