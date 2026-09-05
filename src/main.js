@@ -2,7 +2,6 @@ import './style.css';
 
 const basePath = import.meta.env.BASE_URL;
 
-
 const h1 = document.getElementById('h1');
 const h2 = document.getElementById('h2');
 const m1 = document.getElementById('m1');
@@ -37,7 +36,9 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
+// NASA API Ayarları
 const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
+const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
 
 async function fetchNASAImage() {
   try {
@@ -47,15 +48,15 @@ async function fetchNASAImage() {
     const data = await response.json();
     
     const titleEl = document.getElementById('nasa-title');
-  const imageEl = document.getElementById('nasa-image');
-  const expEl = document.getElementById('nasa-explanation');
+    const imageEl = document.getElementById('nasa-image');
+    const expEl = document.getElementById('nasa-explanation');
 
-  if (titleEl) {
-    titleEl.textContent = data.title;
-  }
-  if (expEl) {
-    expEl.textContent = data.explanation;
-  }
+    if (titleEl) {
+      titleEl.textContent = data.title;
+    }
+    if (expEl) {
+      expEl.textContent = data.explanation;
+    }
 
     if (data.media_type === 'image' && imageEl) {
       imageEl.src = data.hdurl || data.url;
@@ -70,8 +71,8 @@ async function fetchNASAImage() {
     console.error('ERROR', error);
     const titleEl = document.getElementById('nasa-title');
     if (titleEl) {
-    titleEl.textContent = 'Image couldn\'t be loaded:(';
-  }
+      titleEl.textContent = 'Image couldn\'t be loaded:(';
+    }
   }
 }
 
@@ -95,7 +96,6 @@ function renderApps() {
   gridEl.innerHTML = '';
 
   myApps.forEach((app, index) => {
-
     const wrapper = document.createElement('div');
     wrapper.className = 'shortcut-item';
 
@@ -144,24 +144,31 @@ function renderApps() {
   
   gridEl.appendChild(addBtn);
 }
-closeBtn.addEventListener('click', () => modalEl.classList.add('hidden'));
 
-saveBtn.addEventListener('click', () => {
-  const name = nameInput.value.trim();
-  let url = urlInput.value.trim();
+renderApps();
 
-  if (name && url) {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
+// Modal Kapatma
+if (closeBtn) {
+  closeBtn.addEventListener('click', () => modalEl.classList.add('hidden'));
+}
+
+if (saveBtn) {
+  saveBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    let url = urlInput.value.trim();
+
+    if (name && url) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+
+      myApps.push({ name, url });
+      localStorage.setItem('my_y2k_apps', JSON.stringify(myApps));
+      
+      renderApps();
+      nameInput.value = '';
+      urlInput.value = '';
+      modalEl.classList.add('hidden');
     }
-
-    myApps.push({ name, url });
-    localStorage.setItem('my_y2k_apps', JSON.stringify(myApps));
-    
-    renderApps();
-    nameInput.value = '';
-    urlInput.value = '';
-    modalEl.classList.add('hidden');
-  }
-});
-
+  });
+}
