@@ -37,8 +37,6 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-
-const NASA_API_KEY = ''; 
 const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
 
 async function fetchNASAImage() {
@@ -167,8 +165,3 @@ saveBtn.addEventListener('click', () => {
   }
 });
 
-<<<<<<< HEAD
-renderApps();
-=======
-renderApps();
->>>>>>> 6ba6553827bffa0d18d72b49328edf3ce75884f4
