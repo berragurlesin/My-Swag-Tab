@@ -147,7 +147,6 @@ function renderApps() {
 
 renderApps();
 
-// Modal Kapatma
 if (closeBtn) {
   closeBtn.addEventListener('click', () => modalEl.classList.add('hidden'));
 }
