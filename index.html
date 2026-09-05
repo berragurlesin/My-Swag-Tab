@@ -32,6 +32,27 @@
         </form>
       </section>
 
+      <div class="shortcuts-card">
+        <div class="shortcuts-banner">
+          <span>fav shortcuts ♡</span>
+        </div>
+    
+        <div id="shortcuts-grid" class="shortcuts-grid">
+        </div>
+      </div>
+
+      <div id="app-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <h3>add your fav shortcut</h3>
+          <input type="text" id="app-name-input" placeholder="site name" />
+          <input type="url" id="app-url-input" placeholder="URL" />
+          <div class="modal-buttons">
+            <button id="save-app-btn">OK</button>
+            <button id="close-modal-btn">cancel</button>
+          </div>
+        </div>
+      </div>
+
       <section id="nasa-card" class="nasa-card">
         <h2 id="nasa-title">Loading space image...</h2>
         <div id="nasa-media-container">
