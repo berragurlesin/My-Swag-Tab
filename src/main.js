@@ -78,3 +78,93 @@ async function fetchNASAImage() {
 }
 
 fetchNASAImage();
+
+let myApps = JSON.parse(localStorage.getItem('my_y2k_apps')) || [
+  { name: 'GitHub', url: 'https://github.com' },
+  { name: 'YouTube', url: 'https://youtube.com' },
+  { name: 'Stardance Challenge', url: 'https://stardance.hackclub.com/home' }
+];
+
+const gridEl = document.querySelector('#shortcuts-grid');
+const modalEl = document.querySelector('#app-modal');
+const closeBtn = document.querySelector('#close-modal-btn');
+const saveBtn = document.querySelector('#save-app-btn');
+const nameInput = document.querySelector('#app-name-input');
+const urlInput = document.querySelector('#app-url-input');
+
+function renderApps() {
+  if (!gridEl) return;
+  gridEl.innerHTML = '';
+
+  myApps.forEach((app, index) => {
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'shortcut-item';
+
+    const a = document.createElement('a');
+    a.href = app.url;
+    a.className = 'app-icon';
+    a.target = '_blank';
+    a.title = app.name;
+
+    const img = document.createElement('img');
+    try {
+      const domain = new URL(app.url).hostname;
+      img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    } catch (e) {
+      img.src = `https://www.google.com/s2/favicons?domain=${app.url}&sz=64`;
+    }
+    img.alt = app.name;
+
+    a.appendChild(img);
+    wrapper.appendChild(a);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-shortcut-btn';
+    deleteBtn.textContent = '×';
+    deleteBtn.title = 'Remove shortcut';
+
+    deleteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      myApps.splice(index, 1);
+      localStorage.setItem('my_y2k_apps', JSON.stringify(myApps));
+
+      renderApps();
+    });
+
+    wrapper.appendChild(deleteBtn);
+    gridEl.appendChild(wrapper);
+  });
+  
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-box-btn';
+  addBtn.textContent = '+';
+  addBtn.title = 'Add New Shortcut';
+  addBtn.addEventListener('click', () => modalEl.classList.remove('hidden'));
+  
+  gridEl.appendChild(addBtn);
+}
+closeBtn.addEventListener('click', () => modalEl.classList.add('hidden'));
+
+saveBtn.addEventListener('click', () => {
+  const name = nameInput.value.trim();
+  let url = urlInput.value.trim();
+
+  if (name && url) {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+
+    myApps.push({ name, url });
+    localStorage.setItem('my_y2k_apps', JSON.stringify(myApps));
+    
+    renderApps();
+    nameInput.value = '';
+    urlInput.value = '';
+    modalEl.classList.add('hidden');
+  }
+});
+
+renderApps();
