@@ -75,7 +75,6 @@ body {
   transform: translateY(-2px); 
 }
 
-
 .nasa-card {
   position: fixed;
   top: 50px;
@@ -86,7 +85,7 @@ body {
   border: 3px solid #000000;
   border-radius: 12px;
   padding: 14px;
-  box-shadow:none;
+  box-shadow: none;
   box-sizing: border-box;
   z-index: 999;
 }
@@ -168,7 +167,7 @@ body {
   color: #000000;
   transition: transform 0.1s ease, background-color 0.1s ease;
   box-sizing: border-box;
-  box-shadow:none;
+  box-shadow: none;
 }
 
 .app-icon img {
@@ -198,38 +197,104 @@ body {
 .modal-content {
   background: #ffffff;
   border: 3px solid #000000;
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 24px 22px; 
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 260px;
+  gap: 16px; 
+  width: 310px; 
   box-shadow: none;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.modal-content h3 {
+  margin: 0 0 4px 0;
+  font-size: 0.9 rem;
+  font-weight: bold;
   color: #000000;
 }
 
 .modal-content input {
   border: 2px solid #000000;
-  padding: 6px;
-  border-radius: 4px;
+  padding: 10px 12px; 
+  border-radius: 6px;
   outline: none;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 10px;
+  margin-top: 6px;
 }
 
 .modal-buttons button {
   border: 2px solid #000000;
   background: #ffffff;
-  padding: 4px 12px;
+  padding: 6px 16px;
   font-weight: bold;
+  font-size: 0.9rem;
   cursor: pointer;
+  border-radius: 2px;
 }
 
 .modal-buttons button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-label {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #000000;
+}
+
+.preset-backgrounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bg-option {
+  border: 2px solid #000000;
+  background: #ffffff;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+.bg-option:hover, .bg-option.selected {
+  background: #000000;
+  color: #ffffff;
+}
+
+.custom-bg-upload {
+  margin-top: 2px;
+}
+
+.upload-btn {
+  display: inline-block;
+  border: 2px solid #000000;
+  background: #ffffff;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #000000;
+}
+
+.upload-btn:hover {
   background: #000000;
   color: #ffffff;
 }
@@ -247,7 +312,7 @@ body {
   height: 18px;
   background-color: #c0c0c0; 
   color: #000000;
-  border: 2px solid #000000;  
+  border: 2px solid #000000;   
   border-radius: 0px;         
   font-family: monospace, sans-serif;
   font-size: 11px;
@@ -271,4 +336,28 @@ body {
 .delete-shortcut-btn:active {
   transform: translate(1px, 1px);
   box-shadow: none;
+}
+
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.15s ease;
+}
+
+.settings-btn:hover {
+  transform: translateY(-2px); 
+}
+
+.settings-btn img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  display: block;
 }

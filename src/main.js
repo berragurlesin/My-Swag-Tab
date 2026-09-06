@@ -170,4 +170,88 @@ if (saveBtn) {
       modalEl.classList.add('hidden');
     }
   });
+} 
+
+const settingsBtn = document.getElementById('settings-toggle-btn');
+const settingsModal = document.getElementById('settings-modal');
+const closeSettingsBtn = document.getElementById('close-settings-btn');
+const saveSettingsBtn = document.getElementById('save-settings-btn');
+const bgFileInput = document.getElementById('bg-file-input');
+const bgOptions = document.querySelectorAll('.bg-option');
+
+let selectedBg = localStorage.getItem('my_y2k_bg') || 'default';
+
+if (settingsBtn && settingsModal) {
+  settingsBtn.addEventListener('click', () => {
+    selectedBg = localStorage.getItem('my_y2k_bg') || 'default';
+    updateOptionActiveState();
+    settingsModal.classList.remove('hidden');
+  });
 }
+
+if (closeSettingsBtn && settingsModal) {
+  closeSettingsBtn.addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
+  });
+}
+
+if (saveSettingsBtn && settingsModal) {
+  saveSettingsBtn.addEventListener('click', () => {
+    localStorage.setItem('my_y2k_bg', selectedBg);
+    applySavedBackground();
+    settingsModal.classList.add('hidden');
+  });
+}
+
+function applySavedBackground() {
+  const savedBg = localStorage.getItem('my_y2k_bg');
+  if (!savedBg) return;
+
+  if (savedBg === 'default') {
+    document.body.style.backgroundImage = 'none';
+    document.body.style.backgroundColor = '#2554EB';
+  } 
+  else if (savedBg.startsWith('#')) {
+    document.body.style.backgroundImage = 'none';
+    document.body.style.backgroundColor = savedBg;
+  } 
+  else if (savedBg.startsWith('data:image') || savedBg.startsWith('http') || savedBg.startsWith('/')) {
+    document.body.style.backgroundImage = `url('${savedBg}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundAttachment = 'fixed';
+  }
+}
+
+function updateOptionActiveState() {
+  bgOptions.forEach(btn => {
+    if (btn.getAttribute('data-bg') === selectedBg) {
+      btn.classList.add('selected');
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+}
+
+bgOptions.forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedBg = btn.getAttribute('data-bg');
+    updateOptionActiveState();
+  });
+});
+
+if (bgFileInput) {
+  bgFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        selectedBg = event.target.result;
+        updateOptionActiveState();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+applySavedBackground();

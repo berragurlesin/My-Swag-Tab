@@ -36,7 +36,7 @@
         <div class="shortcuts-banner">
           <span>fav shortcuts ♡</span>
         </div>
-    
+        
         <div id="shortcuts-grid" class="shortcuts-grid">
         </div>
       </div>
@@ -61,6 +61,39 @@
         <p id="nasa-explanation"></p>
       </section>
     </main>
+
+    <button id="settings-toggle-btn" class="settings-btn" title="Settings">
+      <img src="/settings.png" alt="Settings" id="settings-icon-img" />
+    </button>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+      <div class="modal-content settings-modal-content">
+        <h3>background settings</h3>
+        
+        <div class="settings-body">
+          <p class="settings-label">you can choose:</p>
+          <div class="preset-backgrounds">
+            <button class="bg-option" data-bg="default">blue</button>
+            <button class="bg-option" data-bg="#e91e63">fuchsia</button>
+            <button class="bg-option" data-bg="#fb8c00">orange</button>
+            <button class="bg-option" data-bg="#00cdd3">turquoise</button>
+            <button class="bg-option" data-bg="https://i.pinimg.com/1200x/b2/4a/01/b24a012ab60770087cfca54a26aee70b.jpg">palms</button>
+            <button class="bg-option" data-bg="https://i.pinimg.com/1200x/a8/5a/26/a85a262035f6c4728ac6f5bb6075538a.jpg">striped</button>
+          </div>
+
+          <p class="settings-label">or upload yours:</p>
+          <div class="custom-bg-upload">
+            <label for="bg-file-input" class="upload-btn">click to select</label>
+            <input type="file" id="bg-file-input" accept="image/*" style="display: none;" />
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button id="save-settings-btn">OK</button>
+          <button id="close-settings-btn">cancel</button>
+        </div>
+      </div>
+    </div>
 
     <script type="module" src="./src/main.js"></script>
   </body>
