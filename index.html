@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
+
+    <div id="stickers-container"></div>
+
     <main id="app">
       <div id="clock" class="clock-display">
         <img id="h1" src="./digits/0.png" alt="0" />
@@ -86,6 +89,17 @@
             <label for="bg-file-input" class="upload-btn">click to select</label>
             <input type="file" id="bg-file-input" accept="image/*" style="display: none;" />
           </div>
+
+          <hr class="solid-hr" />
+          <h3>sticker settings</h3>
+          <div class="custom-bg-upload">
+            <label for="sticker-file-input" class="upload-btn">add new sticker</label>
+            <input type="file" id="sticker-file-input" accept="image/png" style="display: none;" />
+          </div>
+          <div id="sticker-list-preview" class="sticker-preview-grid">
+    
+          </div>
+
         </div>
 
         <div class="modal-buttons">
