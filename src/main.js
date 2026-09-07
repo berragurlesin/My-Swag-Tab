@@ -471,9 +471,4 @@ function saveStickersToStorage() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderStickers);
 } else {
-  renderStickers();
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> cc7f448e086e06ebc69d4980c1b3046b77873c9f
+  renderStickers(); }
