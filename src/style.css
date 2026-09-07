@@ -87,7 +87,7 @@ body {
   padding: 14px;
   box-shadow: none;
   box-sizing: border-box;
-  z-index: 999;
+  z-index: 20;
 }
 
 .nasa-card h2 {
@@ -153,6 +153,11 @@ body {
   align-items: center;
 }
 
+.shortcut-item {
+  position: relative;
+  display: inline-block;
+}
+
 .app-icon, .add-box-btn {
   width: 52px;
   height: 52px;
@@ -183,16 +188,56 @@ body {
   line-height: 1;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 100;
+.delete-shortcut-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background-color: #c0c0c0; 
+  color: #000000;
+  border: 2px solid #000000;    
+  border-radius: 0px;         
+  font-family: monospace, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  z-index: 10;
+  padding: 0;
+  box-shadow: none; 
 }
 
-.modal-overlay.hidden { display: none; }
+.shortcut-item:hover .delete-shortcut-btn {
+  opacity: 1;
+}
+
+.delete-shortcut-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay.hidden { 
+  display: none; 
+}
 
 .modal-content {
   background: #ffffff;
@@ -203,14 +248,16 @@ body {
   flex-direction: column;
   gap: 16px; 
   width: 310px; 
+  max-height: 85vh;
+  overflow-y: auto;
   box-shadow: none;
   color: #000000;
   box-sizing: border-box;
 }
 
 .modal-content h3 {
-  margin: 0 0 4px 0;
-  font-size: 0.9 rem;
+  margin: 0;
+  font-size: 1.15rem;
   font-weight: bold;
   color: #000000;
 }
@@ -255,7 +302,7 @@ body {
 
 .settings-label {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: normal;
   color: #000000;
 }
@@ -275,7 +322,8 @@ body {
   border-radius: 0px;
 }
 
-.bg-option:hover, .bg-option.selected {
+.bg-option:hover, 
+.bg-option.selected {
   background: #000000;
   color: #ffffff;
 }
@@ -299,43 +347,15 @@ body {
   color: #ffffff;
 }
 
-.shortcut-item {
-  position: relative;
-  display: inline-block;
+.settings-body button {
+  margin-top: 2px;
 }
 
-.delete-shortcut-btn {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 18px;
-  height: 18px;
-  background-color: #c0c0c0; 
-  color: #000000;
-  border: 2px solid #000000;   
-  border-radius: 0px;         
-  font-family: monospace, sans-serif;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.1s ease, transform 0.1s ease;
-  z-index: 10;
-  padding: 0;
-  box-shadow: none; 
-}
-
-.shortcut-item:hover .delete-shortcut-btn {
-  opacity: 1;
-}
-
-.delete-shortcut-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: none;
+.solid-hr {
+  border: none;
+  border-top: 2px solid #000000;
+  margin: 12px 0;
+  width: 100%;
 }
 
 .settings-btn {
@@ -347,7 +367,7 @@ body {
   outline: none;
   padding: 0;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 900;
   transition: transform 0.15s ease;
 }
 
@@ -360,4 +380,106 @@ body {
   height: 60px;
   object-fit: contain;
   display: block;
+}
+
+#stickers-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.draggable-sticker {
+  position: absolute;
+  width: 90px;
+  height: auto;
+  cursor: grab;
+  user-select: none;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.draggable-sticker:active {
+  cursor: grabbing;
+}
+
+.sticker-preview-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 8px 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sticker-preview-grid::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sticker-preview-grid::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 1px solid #000000;
+}
+
+.sticker-preview-grid::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+  background: #000000;
+}
+
+.sticker-preview-item {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border: 2px solid #000000;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.sticker-preview-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.delete-sticker-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background-color: #c0c0c0; 
+  color: #000000;
+  border: 2px solid #000000;    
+  border-radius: 0px;         
+  font-family: monospace, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 1;
+  z-index: 10;
+  padding: 0;
+  box-shadow: none; 
+}
+
+.delete-sticker-btn:active {
+  transform: translate(1px, 1px);
 }
