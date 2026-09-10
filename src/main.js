@@ -472,3 +472,16 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderStickers);
 } else {
   renderStickers(); }
+
+const userNameInput = document.getElementById('user-name-input');
+
+if (userNameInput) {
+  const savedName = localStorage.getItem('mynameis');
+  if (savedName) {
+    userNameInput.value = savedName;
+  }
+
+  userNameInput.addEventListener('input', (e) => {
+    localStorage.setItem('mynameis', e.target.value);
+  });
+}
