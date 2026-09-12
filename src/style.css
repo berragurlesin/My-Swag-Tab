@@ -526,33 +526,70 @@ body {
 }
 
 .nametag-img {
-  width: 103%;
+  width: 100%;
   height: auto;
   display: block;
 }
 
 #user-name-input {
   position: absolute;
-  top: 33%;         
-  left: -15%;      
-  width: 130%;    
-  height: 52%;       
-  
-  background: transparent;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 70px;        
   border: none;
-  outline: none;
-  overflow: visible; 
-  white-space: nowrap; 
-  
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 32px;  
-  font-weight: bold;
-  color: #000000;
+  background: transparent;
   text-align: center;
+  font-family: inherit;
+  font-size: 18px;
+  outline: none;
+  z-index: 2;
 }
 
 #user-name-input::placeholder {
   color: #aaaaaa;
-  font-size: 18px;   
+  font-size: 16px;   
   font-weight: normal;
 }
+
+#user-name-input:not(:placeholder-shown) {
+  color: transparent;
+  caret-color: transparent;
+}
+
+#name-letters-display {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.custom-letter-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  margin: 0 -7px;           
+  display: block;
+  transition: all 0.15s ease;
+}
+
+.custom-letter-img.medium-letter {
+  height: 50px;
+  margin: 0 -4px;          
+}
+
+.custom-letter-img.small-letter {
+  height: 40px;
+  margin: 0 -3px;          
+}
+
