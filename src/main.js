@@ -49,6 +49,7 @@ async function fetchNASAImage() {
     const titleEl = document.getElementById('nasa-title');
     const imageEl = document.getElementById('nasa-image');
     const expEl = document.getElementById('nasa-explanation');
+    const container = document.getElementById('nasa-media-container');
 
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
@@ -56,17 +57,23 @@ async function fetchNASAImage() {
     if (data.media_type === 'image' && imageEl) {
       imageEl.src = data.hdurl || data.url;
       imageEl.style.display = 'block';
-    } else if (data.media_type === 'video') {
-      const container = document.getElementById('nasa-media-container');
-      if (container) {
-        container.innerHTML = `<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%; height:300px; border-radius:12px; border: 2px solid #000;"></iframe>`;
-      }
+    } else if (data.media_type === 'video' && container) {
+      if (imageEl) imageEl.style.display = 'none';
+      let videoSrc = data.url;
+      container.innerHTML = `
+        <iframe 
+          src="${videoSrc}" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen 
+          style="width:100%; height:180px; border-radius:6px; border:1px solid #000; margin:8px 0;">
+        </iframe>`;
     }
   } catch (error) {
     console.error('NASA API Error:', error);
     const titleEl = document.getElementById('nasa-title');
     if (titleEl) {
-      titleEl.textContent = 'Image couldn\'t be loaded :(';
+      titleEl.textContent = 'Image/Video couldn\'t be loaded :(';
     }
   }
 }
@@ -353,13 +360,12 @@ function renderStickers() {
   stickerPreviewGrid.innerHTML = '';
 
   activeStickers.forEach((sticker) => {
-  
     const img = document.createElement('img');
     img.src = sticker.src;
     img.className = 'draggable-sticker';
     img.style.left = `${sticker.x}px`;
     img.style.top = `${sticker.y}px`;
-  if (!sticker.size) sticker.size = 100;
+    if (!sticker.size) sticker.size = 100;
     img.style.width = `${sticker.size}px`;
     img.style.height = 'auto';
     img.dataset.id = sticker.id;
@@ -471,17 +477,56 @@ function saveStickersToStorage() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderStickers);
 } else {
-  renderStickers(); }
+  renderStickers(); 
+}
+
+const charMap = {
+  'ç': 'c', 'Ç': 'c',
+  'ğ': 'g', 'Ğ': 'g',
+  'ı': 'i', 'I': 'i', 'İ': 'i',
+  'ö': 'o', 'Ö': 'o',
+  'ş': 's', 'Ş': 's',
+  'ü': 'u', 'Ü': 'u'
+};
+
+function renderCustomName(name) {
+  const displayContainer = document.getElementById('name-letters-display');
+  if (!displayContainer) return;
+
+  displayContainer.innerHTML = '';
+
+  const trimmedName = name.trim();
+  const letterCount = trimmedName.length;
+
+  for (let i = 0; i < letterCount; i++) {
+    let rawChar = trimmedName[i];
+    let char = charMap[rawChar] || rawChar.toLowerCase();
+    if (char === ' ') continue;
+
+    const img = document.createElement('img');
+    img.src = `./letters/${char}.png`;
+    img.alt = char;
+    img.classList.add('custom-letter-img');
+
+    if (letterCount > 10) {
+      img.classList.add('small-letter');
+    } else if (letterCount > 6) {
+      img.classList.add('medium-letter');
+    }
+
+    displayContainer.appendChild(img);
+  }
+}
 
 const userNameInput = document.getElementById('user-name-input');
-
 if (userNameInput) {
-  const savedName = localStorage.getItem('mynameis');
-  if (savedName) {
-    userNameInput.value = savedName;
-  }
+  const savedName = localStorage.getItem('mynameis') || '';
+  userNameInput.value = savedName;
+  renderCustomName(savedName);
 
   userNameInput.addEventListener('input', (e) => {
-    localStorage.setItem('mynameis', e.target.value);
+    const val = e.target.value;
+    localStorage.setItem('mynameis', val);
+    renderCustomName(val);
   });
 }
