@@ -37,41 +37,99 @@ updateClock();
 setInterval(updateClock, 1000);
 
 const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
-const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
+const APOD_URL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&thumbs=true`;
 
 async function fetchNASAImage() {
   try {
     const response = await fetch(APOD_URL);
-    if (!response.ok) throw new Error(`Couldn't be loaded:(`);
+    if (!response.ok) throw new Error(`Failed to load data: ${response.status}`);
     
     const data = await response.json();
     
     const titleEl = document.getElementById('nasa-title');
     const imageEl = document.getElementById('nasa-image');
     const expEl = document.getElementById('nasa-explanation');
+    const container = document.getElementById('nasa-media-container');
 
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
 
-    if (data.media_type === 'image' && imageEl) {
-      imageEl.src = data.hdurl || data.url;
-      imageEl.style.display = 'block';
-    } else if (data.media_type === 'video') {
-      const container = document.getElementById('nasa-media-container');
+    if (data.media_type === 'image') {
+      if (imageEl) {
+        imageEl.src = data.hdurl || data.url;
+        imageEl.style.display = 'block';
+      }
+      const oldIframeWrapper = container ? container.querySelector('.video-responsive-wrapper, .nasa-video-fallback') : null;
+      if (oldIframeWrapper) oldIframeWrapper.remove();
+    } 
+    else if (data.media_type === 'video') {
+      let rawUrl = data.url;
+      let embedUrl = null;
+
+      if (rawUrl.includes('youtube.com') || rawUrl.includes('youtu.be')) {
+        let videoId = '';
+        if (rawUrl.includes('youtu.be/')) {
+          videoId = rawUrl.split('youtu.be/')[1].split('?')[0];
+        } else if (rawUrl.includes('embed/')) {
+          videoId = rawUrl.split('embed/')[1].split('?')[0];
+        } else {
+          const urlParams = new URLSearchParams(new URL(rawUrl).search);
+          videoId = urlParams.get('v');
+        }
+        if (videoId) {
+          embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
+        }
+      } 
+      else if (rawUrl.includes('vimeo.com')) {
+        const vimeoId = rawUrl.split('/').pop().split('?')[0];
+        if (vimeoId && !isNaN(vimeoId)) {
+          embedUrl = `https://player.vimeo.com/video/${vimeoId}`;
+        }
+      }
+
       if (container) {
-        container.innerHTML = `<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%; height:300px; border-radius:12px; border: 2px solid #000;"></iframe>`;
+        if (embedUrl) {
+          if (imageEl) imageEl.style.display = 'none';
+          container.innerHTML = `
+            <div class="video-responsive-wrapper">
+              <iframe 
+                src="${embedUrl}" 
+                title="${data.title || 'NASA Video'}"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>`;
+        } 
+        else {
+          if (imageEl && data.thumbnail_url) {
+            imageEl.src = data.thumbnail_url;
+            imageEl.style.display = 'block';
+          } else if (imageEl) {
+            imageEl.style.display = 'none';
+          }
+
+          container.innerHTML = `
+            <div class="nasa-video-fallback">
+              ${data.thumbnail_url ? `<img src="${data.thumbnail_url}" alt="${data.title}" style="width:100%; border-radius:6px; margin-bottom:8px;" />` : ''}
+              <a href="${rawUrl}" target="_blank" rel="noopener noreferrer" class="nasa-video-link-btn">
+                ▶ watch video (on NASA APOD)
+              </a>
+            </div>`;
+        }
       }
     }
   } catch (error) {
     console.error('NASA API Error:', error);
     const titleEl = document.getElementById('nasa-title');
     if (titleEl) {
-      titleEl.textContent = 'Image couldn\'t be loaded :(';
+      titleEl.textContent = 'Image or Video couldn\'t be loaded :(';
     }
   }
 }
 
 fetchNASAImage();
+
 
 let myApps = JSON.parse(localStorage.getItem('my_y2k_apps')) || [
   { name: 'GitHub', url: 'https://github.com' },
@@ -353,13 +411,12 @@ function renderStickers() {
   stickerPreviewGrid.innerHTML = '';
 
   activeStickers.forEach((sticker) => {
-  
     const img = document.createElement('img');
     img.src = sticker.src;
     img.className = 'draggable-sticker';
     img.style.left = `${sticker.x}px`;
     img.style.top = `${sticker.y}px`;
-  if (!sticker.size) sticker.size = 100;
+    if (!sticker.size) sticker.size = 100;
     img.style.width = `${sticker.size}px`;
     img.style.height = 'auto';
     img.dataset.id = sticker.id;
@@ -471,17 +528,57 @@ function saveStickersToStorage() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderStickers);
 } else {
-  renderStickers(); }
+  renderStickers(); 
+}
+
+const charMap = {
+  'ç': 'c', 'Ç': 'c',
+  'ğ': 'g', 'Ğ': 'g',
+  'ı': 'i', 'I': 'i', 'İ': 'i',
+  'ö': 'o', 'Ö': 'o',
+  'ş': 's', 'Ş': 's',
+  'ü': 'u', 'Ü': 'u'
+};
+
+function renderCustomName(name) {
+  const displayContainer = document.getElementById('name-letters-display');
+  if (!displayContainer) return;
+
+  displayContainer.innerHTML = '';
+
+  const trimmedName = name.trim();
+  const letterCount = trimmedName.length;
+
+  for (let i = 0; i < letterCount; i++) {
+    let rawChar = trimmedName[i];
+    let char = charMap[rawChar] || rawChar.toLowerCase();
+    if (char === ' ') continue;
+
+    const img = document.createElement('img');
+    img.src = `./letters/${char}.png`;
+    img.alt = char;
+    img.classList.add('custom-letter-img');
+
+    if (letterCount > 10) {
+      img.classList.add('small-letter');
+    } else if (letterCount > 6) {
+      img.classList.add('medium-letter');
+    }
+
+    displayContainer.appendChild(img);
+  }
+}
 
 const userNameInput = document.getElementById('user-name-input');
-
 if (userNameInput) {
-  const savedName = localStorage.getItem('mynameis');
-  if (savedName) {
-    userNameInput.value = savedName;
-  }
+  const savedName = localStorage.getItem('mynameis') || '';
+  userNameInput.value = savedName;
+  renderCustomName(savedName);
 
   userNameInput.addEventListener('input', (e) => {
-    localStorage.setItem('mynameis', e.target.value);
+    const val = e.target.value;
+    localStorage.setItem('mynameis', val);
+    renderCustomName(val);
   });
 }
+
