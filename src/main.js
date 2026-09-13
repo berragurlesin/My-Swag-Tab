@@ -54,6 +54,7 @@ async function fetchNASAImage() {
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
 
+<<<<<<< HEAD
     if (data.media_type === 'image') {
       if (imageEl) {
         imageEl.src = data.hdurl || data.url;
@@ -118,12 +119,32 @@ async function fetchNASAImage() {
             </div>`;
         }
       }
+=======
+    if (data.media_type === 'image' && imageEl) {
+      imageEl.src = data.hdurl || data.url;
+      imageEl.style.display = 'block';
+    } else if (data.media_type === 'video' && container) {
+      if (imageEl) imageEl.style.display = 'none';
+      let videoSrc = data.url;
+      container.innerHTML = `
+        <iframe 
+          src="${videoSrc}" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen 
+          style="width:100%; height:180px; border-radius:6px; border:1px solid #000; margin:8px 0;">
+        </iframe>`;
+>>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
     }
   } catch (error) {
     console.error('NASA API Error:', error);
     const titleEl = document.getElementById('nasa-title');
     if (titleEl) {
+<<<<<<< HEAD
       titleEl.textContent = 'Image or Video couldn\'t be loaded :(';
+=======
+      titleEl.textContent = 'Image/Video couldn\'t be loaded :(';
+>>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
     }
   }
 }
@@ -581,4 +602,7 @@ if (userNameInput) {
     renderCustomName(val);
   });
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
