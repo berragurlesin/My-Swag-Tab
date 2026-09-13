@@ -54,7 +54,7 @@ async function fetchNASAImage() {
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
 
-<<<<<<< HEAD
+    // 1. Handle Image Media Type
     if (data.media_type === 'image') {
       if (imageEl) {
         imageEl.src = data.hdurl || data.url;
@@ -63,10 +63,12 @@ async function fetchNASAImage() {
       const oldIframeWrapper = container ? container.querySelector('.video-responsive-wrapper, .nasa-video-fallback') : null;
       if (oldIframeWrapper) oldIframeWrapper.remove();
     } 
+    // 2. Handle Video Media Type
     else if (data.media_type === 'video') {
       let rawUrl = data.url;
       let embedUrl = null;
 
+      // Check YouTube
       if (rawUrl.includes('youtube.com') || rawUrl.includes('youtu.be')) {
         let videoId = '';
         if (rawUrl.includes('youtu.be/')) {
@@ -81,6 +83,7 @@ async function fetchNASAImage() {
           embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
         }
       } 
+      // Check Vimeo
       else if (rawUrl.includes('vimeo.com')) {
         const vimeoId = rawUrl.split('/').pop().split('?')[0];
         if (vimeoId && !isNaN(vimeoId)) {
@@ -89,6 +92,7 @@ async function fetchNASAImage() {
       }
 
       if (container) {
+        // Option A: Embeddable Video (YouTube/Vimeo)
         if (embedUrl) {
           if (imageEl) imageEl.style.display = 'none';
           container.innerHTML = `
@@ -102,6 +106,7 @@ async function fetchNASAImage() {
               </iframe>
             </div>`;
         } 
+        // Option B: Non-embeddable APOD website link (apod.nasa.gov)
         else {
           if (imageEl && data.thumbnail_url) {
             imageEl.src = data.thumbnail_url;
@@ -114,37 +119,17 @@ async function fetchNASAImage() {
             <div class="nasa-video-fallback">
               ${data.thumbnail_url ? `<img src="${data.thumbnail_url}" alt="${data.title}" style="width:100%; border-radius:6px; margin-bottom:8px;" />` : ''}
               <a href="${rawUrl}" target="_blank" rel="noopener noreferrer" class="nasa-video-link-btn">
-                ▶ watch video (on NASA APOD)
+                ▶ Watch Video on NASA APOD
               </a>
             </div>`;
         }
       }
-=======
-    if (data.media_type === 'image' && imageEl) {
-      imageEl.src = data.hdurl || data.url;
-      imageEl.style.display = 'block';
-    } else if (data.media_type === 'video' && container) {
-      if (imageEl) imageEl.style.display = 'none';
-      let videoSrc = data.url;
-      container.innerHTML = `
-        <iframe 
-          src="${videoSrc}" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen 
-          style="width:100%; height:180px; border-radius:6px; border:1px solid #000; margin:8px 0;">
-        </iframe>`;
->>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
     }
   } catch (error) {
     console.error('NASA API Error:', error);
     const titleEl = document.getElementById('nasa-title');
     if (titleEl) {
-<<<<<<< HEAD
       titleEl.textContent = 'Image or Video couldn\'t be loaded :(';
-=======
-      titleEl.textContent = 'Image/Video couldn\'t be loaded :(';
->>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
     }
   }
 }
@@ -602,7 +587,4 @@ if (userNameInput) {
     renderCustomName(val);
   });
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e913d1aac604a7329309dd9464904151b36cb34e
+ 
