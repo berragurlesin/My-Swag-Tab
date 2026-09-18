@@ -53,8 +53,6 @@ async function fetchNASAImage() {
 
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
-
-    // 1. Handle Image Media Type
     if (data.media_type === 'image') {
       if (imageEl) {
         imageEl.src = data.hdurl || data.url;
@@ -63,12 +61,10 @@ async function fetchNASAImage() {
       const oldIframeWrapper = container ? container.querySelector('.video-responsive-wrapper, .nasa-video-fallback') : null;
       if (oldIframeWrapper) oldIframeWrapper.remove();
     } 
-    // 2. Handle Video Media Type
     else if (data.media_type === 'video') {
       let rawUrl = data.url;
       let embedUrl = null;
 
-      // Check YouTube
       if (rawUrl.includes('youtube.com') || rawUrl.includes('youtu.be')) {
         let videoId = '';
         if (rawUrl.includes('youtu.be/')) {
@@ -83,7 +79,6 @@ async function fetchNASAImage() {
           embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
         }
       } 
-      // Check Vimeo
       else if (rawUrl.includes('vimeo.com')) {
         const vimeoId = rawUrl.split('/').pop().split('?')[0];
         if (vimeoId && !isNaN(vimeoId)) {
@@ -92,7 +87,6 @@ async function fetchNASAImage() {
       }
 
       if (container) {
-        // Option A: Embeddable Video (YouTube/Vimeo)
         if (embedUrl) {
           if (imageEl) imageEl.style.display = 'none';
           container.innerHTML = `
@@ -106,7 +100,6 @@ async function fetchNASAImage() {
               </iframe>
             </div>`;
         } 
-        // Option B: Non-embeddable APOD website link (apod.nasa.gov)
         else {
           if (imageEl && data.thumbnail_url) {
             imageEl.src = data.thumbnail_url;
@@ -135,7 +128,6 @@ async function fetchNASAImage() {
 }
 
 fetchNASAImage();
-
 
 let myApps = JSON.parse(localStorage.getItem('my_y2k_apps')) || [
   { name: 'GitHub', url: 'https://github.com' },
@@ -408,7 +400,6 @@ if (!activeStickers || !Array.isArray(activeStickers) || activeStickers.length =
 
 const stickerContainer = document.getElementById('stickers-container');
 const stickerPreviewGrid = document.getElementById('sticker-list-preview');
-const stickerFileInput = document.getElementById('sticker-file-input');
 
 function renderStickers() {
   if (!stickerContainer || !stickerPreviewGrid) return;
@@ -452,6 +443,11 @@ function renderStickers() {
   saveStickersToStorage();
 }
 
+document.addEventListener('click', () => {
+  const existingMenu = document.getElementById('sticker-context-menu');
+  if (existingMenu) existingMenu.remove();
+});
+
 function makeStickerDraggable(element, stickerData) {
   let isDragging = false;
   let startX = 0;
@@ -460,6 +456,8 @@ function makeStickerDraggable(element, stickerData) {
   let initialTop = 0;
 
   const onPointerDown = (e) => {
+    if (e.button !== 0) return;
+
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
@@ -496,29 +494,45 @@ function makeStickerDraggable(element, stickerData) {
   };
 
   element.addEventListener('pointerdown', onPointerDown);
-}
 
-if (stickerFileInput) {
-  stickerFileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  element.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const newSticker = {
-        id: 'sticker-' + Date.now(),
-        src: event.target.result,
-        x: Math.max(20, Math.floor(window.innerWidth / 2 - 45)),
-        y: Math.max(20, Math.floor(window.innerHeight / 2 - 45)),
-        size: 100,
-        isDefault: false,
-        canBeDeleted: true
-      };
+    const oldMenu = document.getElementById('sticker-context-menu');
+    if (oldMenu) oldMenu.remove();
 
-      activeStickers.push(newSticker);
-      renderStickers();
-    };
-    reader.readAsDataURL(file);
+    const menu = document.createElement('div');
+    menu.id = 'sticker-context-menu';
+    menu.className = 'sticker-context-menu';
+    menu.style.left = `${e.clientX}px`;
+    menu.style.top = `${e.clientY}px`;
+
+    const sliderLabel = document.createElement('label');
+    const currentSize = stickerData.size || 100;
+    sliderLabel.textContent = `size: ${currentSize}px`;
+    sliderLabel.className = 'menu-label';
+
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = '30';
+    slider.max = '400';
+    slider.value = currentSize;
+
+    slider.addEventListener('input', (event) => {
+      const newSize = parseInt(event.target.value, 10);
+      element.style.width = `${newSize}px`;
+      sliderLabel.textContent = `size: ${newSize}px`;
+      stickerData.size = newSize;
+      saveStickersToStorage();
+    });
+
+    menu.addEventListener('click', (event) => event.stopPropagation());
+
+    menu.appendChild(sliderLabel);
+    menu.appendChild(slider);
+
+    document.body.appendChild(menu);
   });
 }
 
@@ -588,3 +602,140 @@ if (userNameInput) {
   });
 }
  
+document.addEventListener('DOMContentLoaded', () => {
+  const photoBox = document.getElementById('y2k-photo-box');
+  const photoInput = document.getElementById('photo-upload-input');
+  const photoImg = document.getElementById('uploaded-photo');
+  const photoPlaceholder = document.getElementById('photo-placeholder');
+
+  if (!photoBox || !photoInput || !photoImg || !photoPlaceholder) return;
+
+  const savedPhoto = localStorage.getItem('y2k_user_photo');
+  if (savedPhoto) {
+    photoImg.src = savedPhoto;
+    photoImg.style.display = 'block';
+    photoPlaceholder.style.display = 'none';
+  }
+
+  const savedPosition = JSON.parse(localStorage.getItem('y2k_photo_box_pos'));
+  if (savedPosition) {
+    photoBox.style.left = `${savedPosition.x}px`;
+    photoBox.style.top = `${savedPosition.y}px`;
+    photoBox.style.bottom = 'auto';
+  }
+
+  let hasMoved = false;
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+
+  photoBox.addEventListener('pointerdown', (e) => {
+    hasMoved = false;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    const rect = photoBox.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+
+    photoBox.setPointerCapture(e.pointerId);
+    photoBox.addEventListener('pointermove', onPointerMove);
+    photoBox.addEventListener('pointerup', onPointerUp);
+  });
+
+  function onPointerMove(e) {
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      hasMoved = true;
+    }
+
+    const newX = initialLeft + dx;
+    const newY = initialTop + dy;
+
+    photoBox.style.left = `${newX}px`;
+    photoBox.style.top = `${newY}px`;
+    photoBox.style.bottom = 'auto';
+  }
+
+  function onPointerUp(e) {
+    photoBox.releasePointerCapture(e.pointerId);
+    photoBox.removeEventListener('pointermove', onPointerMove);
+    photoBox.removeEventListener('pointerup', onPointerUp);
+
+    if (hasMoved) {
+      const rect = photoBox.getBoundingClientRect();
+      localStorage.setItem('y2k_photo_box_pos', JSON.stringify({ x: rect.left, y: rect.top }));
+    } else {
+      photoInput.click();
+    }
+  }
+
+  photoInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const base64Image = event.target.result;
+      photoImg.src = base64Image;
+      photoImg.style.display = 'block';
+      photoPlaceholder.style.display = 'none';
+      localStorage.setItem('y2k_user_photo', base64Image);
+    };
+
+    reader.readAsDataURL(file);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const nasaCard = document.getElementById('nasa-card');
+  if (!nasaCard) return;
+
+  const savedNasaPos = JSON.parse(localStorage.getItem('nasa_card_pos'));
+  if (savedNasaPos) {
+    nasaCard.style.left = `${savedNasaPos.x}px`;
+    nasaCard.style.top = `${savedNasaPos.y}px`;
+  }
+
+  let startX = 0;
+  let startY = 0;
+  let initialLeft = 0;
+  let initialTop = 0;
+
+  nasaCard.addEventListener('pointerdown', (e) => {
+    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.tagName === 'IFRAME') {
+      return;
+    }
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    const rect = nasaCard.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+
+    nasaCard.setPointerCapture(e.pointerId);
+    nasaCard.addEventListener('pointermove', onPointerMove);
+    nasaCard.addEventListener('pointerup', onPointerUp);
+  });
+
+  function onPointerMove(e) {
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    nasaCard.style.left = `${initialLeft + dx}px`;
+    nasaCard.style.top = `${initialTop + dy}px`;
+  }
+
+  function onPointerUp(e) {
+    nasaCard.releasePointerCapture(e.pointerId);
+    nasaCard.removeEventListener('pointermove', onPointerMove);
+    nasaCard.removeEventListener('pointerup', onPointerUp);
+
+    const rect = nasaCard.getBoundingClientRect();
+    localStorage.setItem('nasa_card_pos', JSON.stringify({ x: rect.left, y: rect.top }));
+  }
+});

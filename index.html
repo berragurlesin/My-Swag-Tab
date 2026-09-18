@@ -39,10 +39,7 @@
         <div class="shortcuts-banner">
           <span>fav shortcuts ♡</span>
         </div>
-        
-
-        <div id="shortcuts-grid" class="shortcuts-grid">
-        </div>
+        <div id="shortcuts-grid" class="shortcuts-grid"></div>
       </div>
 
       <div id="app-modal" class="modal-overlay hidden">
@@ -58,7 +55,7 @@
       </div>
 
       <section id="nasa-card" class="nasa-card">
-        <h2 id="nasa-title">Loading space image...</h2>
+        <h2 id="nasa-title">loading space image...</h2>
         <div id="nasa-media-container">
           <img id="nasa-image" src="" alt="NASA APOD" style="display: none;" />
         </div>
@@ -97,10 +94,7 @@
             <label for="sticker-file-input" class="upload-btn">add new sticker</label>
             <input type="file" id="sticker-file-input" accept="image/png" style="display: none;" />
           </div>
-          <div id="sticker-list-preview" class="sticker-preview-grid">
-    
-          </div>
-
+          <div id="sticker-list-preview" class="sticker-preview-grid"></div>
         </div>
 
         <div class="modal-buttons">
@@ -110,20 +104,26 @@
       </div>
     </div>
 
+    <div class="nametag-container">
+      <img src="./mynameis.png" alt="hello my name is" class="nametag-img" />
+      <input 
+        type="text" 
+        id="user-name-input" 
+        placeholder="type your name..." 
+        maxlength="15"
+        autocomplete="off"
+      />
+      <div id="name-letters-display"></div>
+    </div>
+
+    <div class="y2k-photo-box" id="y2k-photo-box">
+      <input type="file" id="photo-upload-input" accept="image/*" hidden />
+      <div class="photo-placeholder" id="photo-placeholder">
+        <span>click to upload your motivation note</span>
+      </div>
+      <img id="uploaded-photo" src="" alt="Uploaded Photo" style="display: none;" />
+    </div>
+
     <script type="module" src="./src/main.js"></script>
-
-<div class="nametag-container">
-  <img src="./mynameis.png" alt="hello my name is" class="nametag-img" />
-  <input 
-    type="text" 
-    id="user-name-input" 
-    placeholder="type your name..." 
-    maxlength="15"
-    autocomplete="off"
-  />
-  <div id="name-letters-display"></div>
-</div>
-
   </body>
 </html>
-
