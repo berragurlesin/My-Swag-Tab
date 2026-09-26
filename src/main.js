@@ -429,6 +429,35 @@ function renderStickers() {
   saveStickersToStorage();
 }
 
+const stickerFileInput = document.getElementById('sticker-file-input');
+
+if (stickerFileInput) {
+  stickerFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const base64Image = event.target.result;
+      
+      const newSticker = {
+        id: 'user-sticker-' + Date.now(),
+        src: base64Image,
+        x: window.innerWidth / 2 - 50, 
+        y: window.innerHeight / 2 - 50,
+        size: 100,
+        isDefault: false,
+        canBeDeleted: true
+      };
+      activeStickers.push(newSticker);
+      renderStickers();
+      e.target.value = '';
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
 document.addEventListener('click', () => {
   const existingMenu = document.getElementById('sticker-context-menu');
   if (existingMenu) existingMenu.remove();
