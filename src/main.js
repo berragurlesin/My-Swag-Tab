@@ -1,6 +1,8 @@
 import './style.css';
 
-const basePath = import.meta.env.BASE_URL;
+const basePath = (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) 
+  ? chrome.runtime.getURL('') 
+  : import.meta.env.BASE_URL;
 
 const h1 = document.getElementById('h1');
 const h2 = document.getElementById('h2');
@@ -54,7 +56,6 @@ async function fetchNASAImage() {
     if (titleEl) titleEl.textContent = data.title;
     if (expEl) expEl.textContent = data.explanation;
 
-    // Eski eklenmiş video/fallback butonlarını temizle
     if (container) {
       const oldFallback = container.querySelector('.nasa-video-fallback');
       if (oldFallback) oldFallback.remove();
@@ -62,13 +63,11 @@ async function fetchNASAImage() {
 
     if (data.media_type === 'image') {
       if (imageEl) {
-        // Resim URL'sini ata ve göster
         imageEl.src = data.url || data.hdurl;
         imageEl.style.display = 'block';
 
-        // EĞER RESİM YÜKLENEMEZSE (Kırık Görsel Önleme):
         imageEl.onerror = () => {
-          imageEl.style.display = 'none'; // Kırık simgeyi gizle
+          imageEl.style.display = 'none';
           
           if (container && !container.querySelector('.nasa-video-fallback')) {
             const fallback = document.createElement('div');
@@ -439,7 +438,7 @@ if (stickerFileInput) {
     const reader = new FileReader();
     reader.onload = function (event) {
       const base64Image = event.target.result;
-      
+
       const newSticker = {
         id: 'user-sticker-' + Date.now(),
         src: base64Image,
@@ -449,8 +448,10 @@ if (stickerFileInput) {
         isDefault: false,
         canBeDeleted: true
       };
+
       activeStickers.push(newSticker);
       renderStickers();
+
       e.target.value = '';
     };
 
@@ -590,7 +591,7 @@ function renderCustomName(name) {
     if (char === ' ') continue;
 
     const img = document.createElement('img');
-    img.src = `./letters/${char}.png`;
+    img.src = `${basePath}letters/${char}.png`;
     img.alt = char;
     img.classList.add('custom-letter-img');
 
