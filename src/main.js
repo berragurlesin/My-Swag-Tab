@@ -74,7 +74,7 @@ async function fetchNASAImage() {
             fallback.className = 'nasa-video-fallback';
             fallback.innerHTML = `
               <a href="${data.hdurl || data.url}" target="_blank" rel="noopener noreferrer" class="nasa-video-link-btn">
-                🔍 Open Image in New Tab
+                ▶ Open Image in New Tab
               </a>
             `;
             container.appendChild(fallback);
